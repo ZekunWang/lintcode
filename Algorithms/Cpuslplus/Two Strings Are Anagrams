@@ -1,0 +1,28 @@
+/*
+Write a method anagram(s,t) to decide if two strings are anagrams or not.
+Example
+Given s="abcd", t="dcab", return true.
+
+Challenge
+O(n) time, O(1) extra space
+*/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    /**
+     * @param s: The first string
+     * @param b: The second string
+     * @return true or false
+     */
+    bool anagram(string s, string t) {
+        if(s.length() != t.length()) return false;
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+        if(!s.compare(t)) return true;
+        return false;
+    }
+};
