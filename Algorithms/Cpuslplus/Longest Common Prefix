@@ -1,0 +1,36 @@
+/*
+Given k strings, find the longest common prefix (LCP).
+
+Example
+For strings "ABCD", "ABEF" and "ACEF", the LCP is "A"
+For strings "ABCDEFG", "ABCEFG" and "ABCEFA", the LCP is "ABC"
+*/
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Solution {
+public:    
+    /**
+     * @param strs: A list of strings
+     * @return: The longest common prefix
+     */
+    string longestCommonPrefix(vector<string> &strs) {
+        int pos(0), sz(INT_MAX);
+        bool flag(true);
+        string res;
+        if(strs.empty()) return res;
+        if(strs.size() == 1) return strs[0];
+        for(int i = 0; i < strs.size(); i++) sz = min(sz, (int)strs[i].length());
+        if(!sz) return res;
+        for(; pos < sz; pos++){
+            for(int i = 1; i < strs.size(); i++){
+                if(strs[i][pos] != strs[i-1][pos])
+                    return pos ? (strs[0].substr(0, pos)) : res;
+            }
+        }
+        return strs[0].substr(0, sz);
+    }
+};
