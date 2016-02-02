@@ -24,8 +24,7 @@ public:
     void mergeSortedArray(int A[], int m, int B[], int n) {
         if(!n) return;
         int a(m - 1), b(n - 1), i(m + b);
-        while(a >= 0 && b >= 0)
-            A[i--] = A[a] > B[b] ? A[a--] : B[b--];
-        if(b >= 0) while(i >= 0) A[i--] = B[b--];
+        while(a >= 0 && b >= 0) A[i--] = A[a] > B[b] ? A[a--] : B[b--];
+        while(b >= 0) A[i--] = B[b--];
     }
 };
