@@ -20,15 +20,11 @@ public:
      *          and the index of the last number
      */
     vector<int> subarraySum(vector<int> nums){
-        vector<int> v(2, 0);
         for(int i = 0; i < nums.size(); i++){
             int sum(0);
             for(int j = i; j < nums.size(); j++){
                 sum += nums[j];
-                if(!sum){
-                    v[0] = i, v[1] = j;
-                    return v;
-                }
+                if(!sum) return vector<int>({j, i});
             }
         }
     }
