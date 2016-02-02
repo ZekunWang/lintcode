@@ -8,3 +8,26 @@ Note
 There is at least one subarray that it's sum equals to zero.
 */
 
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number 
+     *          and the index of the last number
+     */
+    public ArrayList<Integer> subarraySum(int[] nums) {
+        if(nums == null) return null;
+        for(int i = 0; i < nums.length; i++){
+            int sum = 0;
+            for(int j = i; j < nums.length; j++){
+                sum += nums[j];
+                if(sum == 0){
+                    ArrayList<Integer> res = new ArrayList<Integer>();
+                    res.add(i);
+                    res.add(j);
+                    return res;
+                }
+            }
+        }
+        return null;
+    }
+}
