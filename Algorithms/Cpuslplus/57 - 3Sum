@@ -13,3 +13,35 @@ Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ 
 The solution set must not contain duplicate triplets.
 */
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:    
+    /**
+     * @param numbers : Give an array numbers of n integer
+     * @return : Find all unique triplets in the array which gives the sum of zero.
+     */
+    vector<vector<int> > threeSum(vector<int> &nums) {
+        vector<vector<int> > v;
+        if(nums.size() < 3) return v;
+        sort(nums.begin(), nums.end());
+        for(int i =  0, bound = nums.size() - 1; i <= bound - 2; i++){
+            int j(i + 1), k(bound), tg = -nums[i];
+            while(j < k){
+                int tmp(nums[j] + nums[k]);
+                if(tmp < tg) j++;
+                else if(tmp > tg) k--;
+                else{
+                    v.push_back(vector<int>({nums[i], nums[j++], nums[k--]}));
+                    while(j < k && nums[k + 1] == nums[k]) k--;
+                    while(j < k && nums[j - 1] == nums[j]) j++;
+                }
+                
+            }
+            while(i < nums.size() - 2 && nums[i + 1] == nums[i]) i++;
+        }
+        return v;
+    }
+};
