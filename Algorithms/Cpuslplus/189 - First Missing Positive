@@ -1,0 +1,29 @@
+/*
+Given an unsorted integer array, find the first missing positive integer.
+
+Example
+Given [1,2,0] return 3,
+and [3,4,-1,1] return 2.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    /**    
+     * @param A: a vector of integers
+     * @return: an integer
+     */
+    int firstMissingPositive(vector<int> A) {
+        if(!A.size()) return 1;
+        sort(A.begin(), A.end());
+        int tg(1);
+        for(int i = 0; i < A.size(); i++){
+            if(A[i] == tg) tg++;
+            else if(A[i] > tg) return tg;
+        }
+        return tg;
+    }
+};
