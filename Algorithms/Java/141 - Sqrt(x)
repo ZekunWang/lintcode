@@ -18,7 +18,8 @@ class Solution {
      * @return: The sqrt of x
      */
     public int sqrt(int x) {
-        return solution1(x);
+        //return solution1(x);
+        return solution2(x);
     }
     public int solution1(int x){
         if(x == 0) return 0;
@@ -38,8 +39,8 @@ class Solution {
         while(lo < hi){
             mid = (lo + hi) / 2;
             if(mid <= x / mid) lo = mid + 1;
-            else hi = mid - 1;
+            else hi = mid;
         }
-        return mid - 1;
+        return hi - 1;
     }
 }
