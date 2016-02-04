@@ -26,6 +26,7 @@ class Solution {
      *return: An integer
      */
     public int updateBits(int n, int m, int i, int j) {
+        if(n == m) return m;
         if(i == 0 && j == 31) return m;
         int mask = ~(~(~0 << (j - i + 1)) << i);
         return (n & mask) | (m << i);
