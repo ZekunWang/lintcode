@@ -1,0 +1,52 @@
+/*
+Given n pieces of wood with length L[i] (integer array). Cut them into small pieces to guarantee you could 
+have equal or more than k pieces with the same length. What is the longest length you can get from the n 
+pieces of wood? Given L & k, return the maximum length of the small pieces.
+
+Example
+For L=[232, 124, 456], k=7, return 114.
+
+Note
+You couldn't cut wood into float length.
+
+Challenge
+O(n log Len), where Len is the longest length of the wood.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    /** 
+     *@param L: Given n pieces of wood with length L[i]
+     *@param k: An integer
+     *return: The maximum length of the small pieces.
+     */
+    int bSearch(vector<int> &v, int lo, int hi, int tg);
+    bool chkLen(vector<int> &v, int len, int num);
+    int woodCut(vector<int> L, int k) {
+        int hi(0), sum(0);
+        for(int i : L){
+            hi = max(hi, i);
+            sum = max(sum, sum + i);
+        }
+        if(k < 2) return hi;
+        if(sum < k) return 0;
+        return bSearch(L, 1, hi, k);
+    }
+};
+
+int Solution::bSearch(vector<int> &v, int lo, int hi, int tg){
+    if(lo > hi) return hi;
+    int mid = lo + (hi - lo) / 2;
+    if(chkLen(v, mid, tg)) return bSearch(v, mid + 1, hi, tg);
+    return bSearch(v, lo, mid - 1, tg);
+}
+
+bool Solution::chkLen(vector<int> &v, int len, int num){
+    int cnt(0);
+    for(int i = 0; i < v.size() && cnt < num; i++) cnt += v[i] / len;
+    return cnt >= num;
+}
