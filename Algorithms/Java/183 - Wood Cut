@@ -1,0 +1,45 @@
+/*
+Given n pieces of wood with length L[i] (integer array). Cut them into small pieces to guarantee you could 
+have equal or more than k pieces with the same length. What is the longest length you can get from the n 
+pieces of wood? Given L & k, return the maximum length of the small pieces.
+
+Example
+For L=[232, 124, 456], k=7, return 114.
+
+Note
+You couldn't cut wood into float length.
+
+Challenge
+O(n log Len), where Len is the longest length of the wood.
+*/
+
+public class Solution {
+    /** 
+     *@param L: Given n pieces of wood with length L[i]
+     *@param k: An integer
+     *return: The maximum length of the small pieces.
+     */
+    public int woodCut(int[] L, int k) {
+        if(L == null) return 0;
+        int hi = 0, sum = 0;
+        if(k != 0 && L.length == 1) return L[0] / k;
+        for(int i : L){
+            hi = Math.max(hi, i);
+            sum = Math.max(sum, sum + i);
+        }
+        if(k < 2) return hi;
+        if(sum < k) return 0;
+        return bSearch(L, 1, hi, k);
+    }
+    public int bSearch(int[] L, int lo, int hi, int tg){
+        if(lo > hi) return hi;
+        int mid = lo + (hi - lo) / 2;
+        if(chkLen(L, mid, tg)) return bSearch(L, mid + 1, hi, tg);
+        return bSearch(L, lo, mid - 1, tg);
+    }
+    public boolean chkLen(int[] L, int len, int num){
+        int cnt = 0;
+        for(int i : L) cnt += i / len;
+        return cnt >= num;
+    }
+}
