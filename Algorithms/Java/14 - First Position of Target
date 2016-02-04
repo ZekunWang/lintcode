@@ -1,0 +1,29 @@
+/*
+For a given sorted array (ascending order) and a target number, find the first index of this number in O(log n) time complexity.
+
+If the target number does not exist in the array, return -1.
+
+Example
+If the array is [1, 2, 3, 3, 4, 5, 10], for given target 3, return 2.
+
+Challenge
+If the count of numbers is bigger than 2^32, can your code work properly?
+*/
+
+class Solution {
+    /**
+     * @param nums: The integer array.
+     * @param target: Target to find.
+     * @return: The first position of target. Position starts from 0.
+     */
+    public int binarySearch(int[] nums, int target) {
+        if(nums == null || nums.length == 0) return -1;
+        return bSearch(nums, 0, nums.length - 1, target);
+    }
+    public int bSearch(int[] n, int lo, int hi, int tg){
+        if(lo > hi) return (lo < 0 || lo > n.length || n[lo] != tg) ? -1 : lo;
+        int mid = (lo + hi) / 2;
+        if(n[mid] < tg) return bSearch(n, mid + 1, hi, tg);
+        return bSearch(n, lo, mid - 1, tg);
+    }
+}
