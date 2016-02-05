@@ -1,0 +1,36 @@
+/*
+Calculate the a^n % b where a, b and n are all 32bit integers.
+
+Example
+For 231 % 3 = 2
+
+For 1001000 % 1000 = 0
+
+Challenge
+O(logn)
+*/
+
+#include <iostream>
+using namespace std;
+
+class Solution {
+    int bSearch(int a, int b, int n);
+public:
+    /*
+     * @param a, b, n: 32bit integers
+     * @return: An integer
+     */
+    int fastPower(int a, int b, int n) {
+        if(b == 1 || a == b || a % b == 0) return 0;
+        if(a == 1 || n == 0) return 1;
+        return bSearch(a, b, n);
+    }
+};
+
+int Solution::bSearch(int a, int b, int n){
+    if(n == 1) return a % b;
+    long tmp = bSearch(a, b, n / 2);
+    tmp = (tmp * tmp) % b;
+    if(n % 2 == 1) tmp = (tmp * a) % b;
+    return (int)tmp;
+}
