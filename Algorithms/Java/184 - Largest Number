@@ -1,0 +1,79 @@
+/*
+Given a list of non negative integers, arrange them such that they form the largest number.
+
+Example
+Given [1, 20, 23, 4, 8], the largest formed number is 8423201.
+
+Note
+The result may be very large, so you need to return a string instead of an integer.
+
+Challenge
+Do it in O(nlogn) time complexity.
+*/
+
+import java.util.*;
+
+public class Solution {
+    /**
+     *@param num: A list of non negative integers
+     *@return: A string
+     */
+    public String largestNumber(int[] num) {
+        if(num == null) return null;
+        ArrayList<Integer> al = new ArrayList<Integer>();
+        for(int i : num) al.add(i);
+        sort(al, 0, num.length - 1, new ArrayList<Integer>(al));
+        String res = "";
+        boolean zero = true;
+        for(int i : al){
+            res += i;
+            if(i != 0) zero = false;
+        }
+        return zero ? "0" : res;
+    }
+    public void sort(ArrayList<Integer> al, int lo, int hi, ArrayList<Integer> tmpA){
+        if(lo == hi) return;
+        int mid = (hi + lo) / 2;
+        sort(al, lo, mid, tmpA);
+        sort(al, mid + 1, hi, tmpA);
+        merge(al, lo, mid, hi, tmpA);
+    }
+    public void merge(ArrayList<Integer> al, int lo, int mid, int hi, ArrayList<Integer> tmpA){
+        int idxT = hi, idxL = mid, idxR = hi;
+        if(compInt(al.get(mid), al.get(mid + 1)) > -1) return;
+        while(idxR > mid){
+            int right = al.get(idxR);
+            int left = idxL >= lo ? al.get(idxL) : right;
+            if(compInt(left, right) == -1){
+                tmpA.set(idxT--, left);
+                idxL--;
+            }else{
+                tmpA.set(idxT--, right);
+                idxR--;
+            }
+        }
+        for(int i = idxT + 1; i <= hi; i++)
+            al.set(i, tmpA.get(i));
+    }
+    // 1: a > b;  0: a == b;  -1: a < b
+    public int compInt(long a, long b){
+        if(a == b) return 0;
+        long ta = a, tb = b;
+        while(ta > 9 && tb > 9){
+            ta /= 10;
+            tb /= 10;
+        }
+        if(ta > 9) b = shiftInt(b, tb, ta);
+        else a = shiftInt(a, ta, tb);
+        if(a == b) return 0;
+        if(a > b) return 1;
+        return -1;
+    }
+    public long shiftInt(long orig, long small, long large){
+        while(large / 10 > 0){
+            orig = orig * 10 + small;
+            large /= 10;
+        }
+        return orig;
+    }
+}
