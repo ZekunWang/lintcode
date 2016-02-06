@@ -1,0 +1,50 @@
+/*
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+Each element in the array represents your maximum jump length at that position.
+Determine if you are able to reach the last index.
+
+Example
+A = [2,3,1,1,4], return true.
+
+A = [3,2,1,0,4], return false.
+
+Note
+This problem have two method which is Greedy and Dynamic Programming.
+The time complexity of Greedy method is O(n).
+The time complexity of Dynamic Programming method is O(n^2).
+
+We manually set the small data set to allow you pass the test in both ways. This is just to let you learn how to use this 
+problem in dynamic programming ways. If you finish it in dynamic programming ways, you can try greedy method to make it accept again.
+*/
+
+public class Solution {
+    /**
+     * @param A: A list of integers
+     * @return: The boolean answer
+     */
+    public boolean canJump(int[] A) {
+        if(A == null || A.length == 0) return false;
+        return solution1(A);
+        //return solution2(A);
+    }
+    public boolean solution1(int[] A){
+        int cnt = 1;
+        for(int i = 0; i < A.length - 1; i++){
+            cnt = Math.max(--cnt, A[i]);
+            if(cnt == 0) return false;
+        }
+        return true;
+    }
+    public boolean solution2(int[] A){
+        boolean[] chk = new boolean[A.length];
+        chk[0] = true;
+        for(int i = 1; i < A.length; i++) chk[i] = false;
+        for(int i = 0; i < A.length - 1; i++){
+            if(chk[i] == false) return false;
+            if(i + A[i] >= A.length - 1) return true; 
+            for(int j = i + 1; j <= i + A[i] && j < A.length; j++)
+                chk[j] = true;
+        }
+        return chk[A.length - 1];
+    }
+}
