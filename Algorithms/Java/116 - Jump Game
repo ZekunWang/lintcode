@@ -42,7 +42,7 @@ public class Solution {
         for(int i = 0; i < A.length - 1; i++){
             if(chk[i] == false) return false;
             if(i + A[i] >= A.length - 1) return true; 
-            for(int j = i + 1; j <= i + A[i] && j < A.length; j++)
+            for(int j = i + 1; j <= i + A[i]; j++)
                 chk[j] = true;
         }
         return chk[A.length - 1];
