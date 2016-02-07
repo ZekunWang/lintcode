@@ -1,0 +1,35 @@
+/*
+Given string A representative a positive integer which has N digits, remove any k digits of the number, 
+the remaining digits are arranged according to the original order to become a new positive integer.
+
+Find the smallest integer after remove k digits.
+N <= 240 and k <= N,
+
+Example
+Given an integer A = "178542", k = 4
+return a string "12"
+*/
+
+public class Solution {
+    /**
+     *@param A: A positive integer which has N digits, A is a string.
+     *@param k: Remove k digits.
+     *@return: A string
+     */
+    public String DeleteDigits(String A, int k) {
+        if(A == null || A.length() == 0 || k == 0) return A;
+        while(k-- != 0){
+            int i = 0, sz = A.length();
+            while(i < sz - 1 && A.charAt(i) <= A.charAt(i + 1)) i++;
+            String s2 = "";
+            if(i < sz - 1) s2 = A.substring(i + 1);
+            A = A.substring(0, i) + s2;
+            if(A.charAt(0) == '0'){
+                i = 0;
+                while(i < A.length() && A.charAt(i) == '0') i++;
+                A = A.substring(i);
+            }
+        }
+        return A;
+    }
+}
