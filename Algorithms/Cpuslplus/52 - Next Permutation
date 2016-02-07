@@ -1,0 +1,49 @@
+/*
+Given a list of integers, which denote a permutation.
+Find the next permutation in ascending order.
+
+Example
+For [1,3,2,3], the next permutation is [1,3,3,2]
+
+For [4,3,2,1], the next permutation is [1,2,3,4]
+
+Note
+The list may contains duplicate integers.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+    void reverse(vector<int> &v, int i, int j);
+    vector<int> solution2(vector<int> &nums);
+public:
+    /**
+     * @param nums: An array of integers
+     * @return: An array of integers that's next permuation
+     */
+    vector<int> nextPermutation(vector<int> &nums) {
+        if(nums.size() < 2) return nums;
+        return solution2(nums);
+    }
+};
+
+vector<int> Solution::solution2(vector<int> &v){
+    int sz = v.size();
+    for(int i = sz - 2; i >= 0; i--){
+        if(v[i] < v[i + 1]){
+            int j = sz - 1;
+            while(j > i && v[j] <= v[i]) j--;
+            swap(v[i], v[j]);
+            reverse(v, i + 1, sz -1);
+            return v;
+        }
+    }
+    reverse(v, 0, sz -1);
+    return v;
+}
+
+void Solution::reverse(vector<int> &v, int i, int j){
+    for(; i < j; i++, j--) swap(v[i], v[j]);
+}
