@@ -1,0 +1,59 @@
+/*
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+Return a deep copy of the list.
+
+Challenge
+Could you solve it with O(1) space?
+*/
+
+/**
+ * Definition for singly-linked list with a random pointer.
+ * struct RandomListNode {
+ *     int label;
+ *     RandomListNode *next, *random;
+ *     RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+ * };
+ */
+class Solution {
+    void getRandomPointer(RandomListNode *cur, RandomListNode *ncur);
+public:
+    /**
+     * @param head: The head of linked list with a random pointer.
+     * @return: A new head of a deep copy of the list.
+     */
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if(!head) return NULL;
+        RandomListNode *nhead = new RandomListNode(head->label), *ncur(nhead);
+        RandomListNode *cur = head, *tail, *ntail;
+        while(cur->next){
+            ncur->next = new RandomListNode(cur->next->label);
+            cur = cur->next;
+            ncur = ncur->next;
+        }
+        tail = cur;
+        ntail = ncur;
+        tail->next = head;
+        ntail->next = nhead;
+        cur = head;
+        ncur = nhead;
+        while(cur != tail){
+            getRandomPointer(cur, ncur);
+            cur = cur->next;
+            ncur = ncur->next;
+        }
+        getRandomPointer(cur, ncur);
+        tail->next = NULL;
+        ntail->next = NULL;
+        return nhead;
+    }
+};
+
+void Solution::getRandomPointer(RandomListNode *cur, RandomListNode *ncur){
+    if(!cur->random) return;
+    RandomListNode *nxt(cur), *nnxt(ncur);
+    while(cur->random != nxt){
+        nxt = nxt->next;
+        nnxt = nnxt->next;
+    }
+    ncur->random = nnxt;
+}
