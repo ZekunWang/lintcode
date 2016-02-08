@@ -1,0 +1,37 @@
+/*
+Given a binary tree, determine if it is a valid binary search tree (BST).
+
+Assume a BST is defined as follows:
+  The left subtree of a node contains only nodes with keys less than the node's key.
+  The right subtree of a node contains only nodes with keys greater than the node's key.
+  Both the left and right subtrees must also be binary search trees.
+  A single node tree is a BST
+  
+Example
+An example:
+
+  2
+ / \
+1   4
+   / \
+  3   5
+The above binary tree is serialized as {2,1,4,#,#,3,5} (in level order).
+*/
+
+class Solution {
+    bool validate(TreeNode *node, int lo, int hi);
+public:
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+    bool isValidBST(TreeNode *root) {
+        return validate(root, INT_MIN, INT_MAX);
+    }
+};
+
+bool Solution::validate(TreeNode *node, int lo, int hi){
+    if(!node) return true;
+    if(lo > node->val || node->val > hi) return false;
+    return validate(node->left, lo, node->val - 1) && validate(node->right, node->val + 1, hi);
+}
