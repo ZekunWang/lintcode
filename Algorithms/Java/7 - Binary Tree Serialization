@@ -1,0 +1,109 @@
+/*
+Design an algorithm and write code to serialize and deserialize a binary tree. Writing the tree to a file is 
+called 'serialization' and reading back from the file to reconstruct the exact same binary tree is 'deserialization'.
+
+There is no limit of how you deserialize or serialize a binary tree, you only need to make sure you can 
+serialize a binary tree to a string and deserialize this string to the original structure.
+
+Example
+An example of testdata: Binary tree {3,9,20,#,#,15,7}, denote the following structure:
+  3
+ / \
+9  20
+  /  \
+ 15   7
+Our data serialization use bfs traversal. This is just for when you got wrong answer and want to debug the input.
+
+You can use other method to do serializaiton and deserialization.
+*/
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+import java.util.*;
+
+class Solution {
+    /**
+     * This method will be invoked first, you should design your own algorithm 
+     * to serialize a binary tree which denote by a root node to a string which
+     * can be easily deserialized by your own "deserialize" method later.
+     */
+    public String serialize(TreeNode root) {
+        if(root == null) return "";
+        return buildString(root);
+    }
+    
+    public String buildString(TreeNode root){
+        LinkedList<TreeNode> q = new LinkedList<TreeNode>();
+        String s = '{' + String.valueOf(root.val);
+        q.add(root.left);
+        q.add(root.right);
+        while(!q.isEmpty()){
+            TreeNode cur = q.poll();
+            if(cur == null) s += ",#";
+            else{
+                s += ',' + String.valueOf(cur.val);
+                q.add(cur.left);
+                q.add(cur.right);
+            }
+        }
+        int len = s.length() - 1;
+        while(len >= 0 && s.charAt(len) == '#') len -= 2;
+        return s.substring(0, len + 1) + '}';
+    }
+    
+    /**
+     * This method will be invoked second, the argument data is what exactly
+     * you serialized at method "serialize", that means the data is not given by
+     * system, it's given by your own serialize method. So the format of data is
+     * designed by yourself, and deserialize it here as you serialize it in 
+     * "serialize" method.
+     */
+    public TreeNode deserialize(String data) {
+        if(data == null || data.equals("") || 
+            data.equals("{}") || data.equals("{#}")) return null;
+        return buildTree(data);
+    }
+    public TreeNode buildTree(String data){
+        int pos = 1;
+        LinkedList<TreeNode> q = new LinkedList<TreeNode>();
+        int num = getNum(data, pos);
+        pos += String.valueOf(num).length() + 1;
+        TreeNode head = new TreeNode(num);
+        q.push(head);
+        while(pos < data.length()){
+            TreeNode cur = q.poll();
+            if(data.charAt(pos) == '#') pos += 2;   //left subtree
+            else{
+                num = getNum(data, pos);
+                cur.left = new TreeNode(num);
+                pos += String.valueOf(num).length() + 1;
+                q.add(cur.left);
+            }
+            if(pos >= data.length()) break;
+            if(data.charAt(pos) == '#') pos += 2;   //right subtree
+            else{
+                num = getNum(data, pos);
+                cur.right = new TreeNode(num);
+                pos += String.valueOf(num).length() + 1;
+                q.add(cur.right);
+            }
+        }
+        return head;
+    }
+    public int getNum(String data, int pos){
+        int num = 0, cur = pos;
+        while(cur < data.length() && data.charAt(cur) != ',' && data.charAt(cur) != '}')
+            num = num * 10 + data.charAt(cur++) - '0';
+        return num;
+    }
+}
