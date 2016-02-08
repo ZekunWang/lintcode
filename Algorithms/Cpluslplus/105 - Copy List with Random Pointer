@@ -15,7 +15,7 @@ Could you solve it with O(1) space?
  * };
  */
 class Solution {
-    void getRandomPointer(RandomListNode *cur, RandomListNode *ncur);
+    void setRandom(RandomListNode *cur, RandomListNode *ncur);
 public:
     /**
      * @param head: The head of linked list with a random pointer.
@@ -37,18 +37,18 @@ public:
         cur = head;
         ncur = nhead;
         while(cur != tail){
-            getRandomPointer(cur, ncur);
+            setRandom(cur, ncur);
             cur = cur->next;
             ncur = ncur->next;
         }
-        getRandomPointer(cur, ncur);
+        setRandom(cur, ncur);
         tail->next = NULL;
         ntail->next = NULL;
         return nhead;
     }
 };
 
-void Solution::getRandomPointer(RandomListNode *cur, RandomListNode *ncur){
+void Solution::setRandom(RandomListNode *cur, RandomListNode *ncur){
     if(!cur->random) return;
     RandomListNode *nxt(cur), *nnxt(ncur);
     while(cur->random != nxt){
