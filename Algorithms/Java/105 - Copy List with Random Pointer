@@ -1,0 +1,56 @@
+/*
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+Return a deep copy of the list.
+
+Challenge
+Could you solve it with O(1) space?
+*/
+
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    /**
+     * @param head: The head of linked list with a random pointer.
+     * @return: A new head of a deep copy of the list.
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if(head == null) return head;
+        RandomListNode nhead = new RandomListNode(head.label), ncur = nhead;
+        RandomListNode cur = head, tail = null, ntail = null;
+        while(cur.next != null){
+            ncur.next = new RandomListNode(cur.next.label);
+            cur = cur.next;
+            ncur = ncur.next;
+        }
+        tail = cur;
+        ntail = ncur;
+        tail.next = head;
+        ntail.next = nhead;
+        cur = head;
+        ncur = nhead;
+        while(cur != tail){
+            setRandom(cur, ncur);
+            cur = cur.next;
+            ncur = ncur.next;
+        }
+        setRandom(cur, ncur);
+        tail.next = null;
+        ntail.next = null;
+        return nhead;
+    }
+    public void setRandom(RandomListNode cur, RandomListNode ncur){
+        if(cur.random == null) return;
+        RandomListNode nxt = cur, nnxt = ncur;
+        while(cur.random != nxt){
+            nxt = nxt.next;
+            nnxt = nnxt.next;
+        }
+        ncur.random = nnxt;
+    }
+}
