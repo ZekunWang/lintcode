@@ -1,0 +1,60 @@
+/*
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You must do this in-place without altering the nodes' values.
+
+Example
+For example,
+Given 1->2->3->4->null, reorder it to 1->4->2->3->null.
+*/
+
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+class Solution {
+    ListNode *reverse(ListNode *head);
+public:
+    /**
+     * @param head: The first node of linked list.
+     * @return: void
+     */
+    void reorderList(ListNode *head) {
+        if(!head || !head->next) return;
+        ListNode *fast(head), *slow(head);
+        while(fast && fast->next){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        fast = reverse(slow->next);
+        slow->next = NULL;
+        slow = head;
+        while(fast){
+            ListNode *tmp(fast->next);
+            fast->next = slow->next;
+            slow->next = fast;
+            slow = fast->next;
+            fast = tmp;
+        }
+    }
+};
+
+ListNode *Solution::reverse(ListNode *head){
+    ListNode *nhead(NULL);
+    while(head){
+        ListNode *tmp(head->next);
+        head->next = nhead;
+        nhead = head;
+        head = tmp;
+    }
+    return nhead;
+}
