@@ -24,6 +24,8 @@ You may assume that duplicates do not exist in the tree.
  * }
  */
  
+#include <vector>
+using namespace std;
 
 class Solution {
     /**
