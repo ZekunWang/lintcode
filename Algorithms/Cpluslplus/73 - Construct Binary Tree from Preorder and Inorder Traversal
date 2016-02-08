@@ -1,0 +1,52 @@
+/*
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Example
+Given in-order [1,2,3] and pre-order [2,1,3], return a tree:
+
+  2
+ / \
+1   3
+Note
+You may assume that duplicates do not exist in the tree.
+*/
+
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+ 
+
+class Solution {
+    /**
+     *@param preorder : A list of integers that preorder traversal of a tree
+     *@param inorder : A list of integers that inorder traversal of a tree
+     *@return : Root of a tree
+     */
+    TreeNode *build(vector<int> &p, int lop, int hip, vector<int> &i, int loi, int hii);
+public:
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+        if(preorder.size() != inorder.size() || !preorder.size()) return NULL;
+        return build(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+    }
+};
+
+TreeNode *Solution::build(vector<int> &p, int lop, int hip, vector<int> &i, int loi, int hii){
+    if(lop > hip) return NULL;
+    if(lop == hip) return new TreeNode(p[lop]);
+    int val(p[lop]), pos(loi);
+    TreeNode *node = new TreeNode(val);
+    while(i[pos] != val) pos++;
+    int cnt(pos - loi);
+    node->left = build(p, lop + 1, lop + cnt, i, loi, pos - 1);
+    node->right = build(p, lop + cnt + 1, hip, i, pos + 1, hii);
+    return node;
+}
