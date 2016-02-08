@@ -1,0 +1,63 @@
+/*
+Given a binary tree, return the preorder traversal of its nodes' values.
+
+Example
+Given:
+
+    1
+   / \
+  2   3
+ / \
+4   5
+return [1,2,4,5,3].
+
+Challenge
+Can you do it without recursion?
+*/
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+import java.util.*;
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: Preorder in ArrayList which contains node values.
+     */
+    private ArrayList<Integer> al;
+    public ArrayList<Integer> preorderTraversal(TreeNode root) {
+        al = new ArrayList<Integer>();
+        if(root == null) return al;
+        //solution1(root);
+        solution2(root);
+        return al;
+    }
+    
+    public void solution1(TreeNode root){ //recursion
+        if(root == null) return;
+        al.add(root.val);
+        solution1(root.left);
+        solution1(root.right);
+    }
+
+    public void solution2(TreeNode root){ //iteration
+        Stack<TreeNode> s = new Stack<TreeNode>();
+        s.push(root);
+        while(!s.empty()){
+            TreeNode tmp = s.pop();
+            al.add(tmp.val);
+            if(tmp.right != null) s.push(tmp.right);
+            if(tmp.left != null) s.push(tmp.left);
+        }
+    }
+}
