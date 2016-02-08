@@ -1,0 +1,70 @@
+/*
+Given a binary tree, return the preorder traversal of its nodes' values.
+
+Example
+Given:
+
+    1
+   / \
+  2   3
+ / \
+4   5
+return [1,2,4,5,3].
+
+Challenge
+Can you do it without recursion?
+*/
+
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+class Solution {
+    vector<int> v;
+    void solution1(TreeNode *root);
+    void solution2(TreeNode *root);
+public:
+    /**
+     * @param root: The root of binary tree.
+     * @return: Preorder in vector which contains node values.
+     */
+    vector<int> preorderTraversal(TreeNode *root) {
+        if(!root) return v;
+        //solution1(root);
+        solution2(root);
+        return v;
+    }
+};
+
+void Solution::solution1(TreeNode *root){ //recursion
+    if(!root) return;
+    v.push_back(root->val);
+    solution1(root->left);
+    solution1(root->right);
+}
+
+void Solution::solution2(TreeNode *root){ //iteration
+    stack<TreeNode *> s;
+    s.push(root);
+    while(!s.empty()){
+        TreeNode *tmp(s.top());
+        s.pop();
+        v.push_back(tmp->val);
+        //cout << (tmp->val) << ' ';
+        if(tmp->right) s.push(tmp->right);
+        if(tmp->left) s.push(tmp->left);
+    }
+}
