@@ -1,0 +1,119 @@
+/*
+Design an algorithm and write code to serialize and deserialize a binary tree. Writing the tree to a file is 
+called 'serialization' and reading back from the file to reconstruct the exact same binary tree is 'deserialization'.
+
+There is no limit of how you deserialize or serialize a binary tree, you only need to make sure you can 
+serialize a binary tree to a string and deserialize this string to the original structure.
+
+Example
+An example of testdata: Binary tree {3,9,20,#,#,15,7}, denote the following structure:
+  3
+ / \
+9  20
+  /  \
+ 15   7
+Our data serialization use bfs traversal. This is just for when you got wrong answer and want to debug the input.
+
+You can use other method to do serializaiton and deserialization.
+*/
+
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
+
+class Solution {
+    string buildString(TreeNode *root);
+    TreeNode *buildTree(string s);
+    int getNum(string s, int &pos);
+public:
+    /**
+     * This method will be invoked first, you should design your own algorithm 
+     * to serialize a binary tree which denote by a root node to a string which
+     * can be easily deserialized by your own "deserialize" method later.
+     */
+    string serialize(TreeNode *root) {
+        if(!root) return "";
+        return buildString(root);
+    }
+
+    /**
+     * This method will be invoked second, the argument data is what exactly
+     * you serialized at method "serialize", that means the data is not given by
+     * system, it's given by your own serialize method. So the format of data is
+     * designed by yourself, and deserialize it here as you serialize it in 
+     * "serialize" method.
+     */
+    TreeNode *deserialize(string data) {
+        if(data == "" || data == "{}" || data == "{#}") return NULL;
+        return buildTree(data);
+    }
+};
+
+string Solution::buildString(TreeNode *root){
+    queue<TreeNode *> q;
+    string s = '{' + to_string(root->val);
+    q.push(root->left);
+    q.push(root->right);
+    while(!q.empty()){
+        TreeNode *cur(q.front());
+        q.pop();
+        if(!cur) s += ",#";
+        else{
+            s += ',' + to_string(cur->val);
+            q.push(cur->left);
+            q.push(cur->right);
+        }
+    }
+    int len(s.length() - 1);
+    while(len >= 0 && s[len] == '#') len -= 2;
+    return s.substr(0, len + 1) + '}';
+}
+
+TreeNode *Solution::buildTree(string s){
+    int pos(1);
+    queue<TreeNode *> q;
+    int num = getNum(s, pos);
+    TreeNode *head = new TreeNode(num);
+    q.push(head);
+    pos += 1;
+    while(pos < s.length()){
+        TreeNode *cur(q.front());
+        q.pop();
+        if(s[pos] == '#') pos += 2;
+        else{
+            num = getNum(s, pos);
+            pos += 1;
+            cur->left = new TreeNode(num);
+            q.push(cur->left);
+        }
+        if(pos >= s.length()) break;
+        if(s[pos] == '#') pos += 2;
+        else{
+            num = getNum(s, pos);
+            pos += 1;
+            cur->right = new TreeNode(num);
+            q.push(cur->right);
+        }
+    }
+    return head;
+}
+
+int Solution::getNum(string s, int &pos){
+    int num(0);
+    while(pos < s.length() && s[pos] != ',' && s[pos] != '}')
+        num = num * 10 + s[pos++] - '0';
+    return num;
+}
