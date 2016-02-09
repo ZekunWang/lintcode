@@ -42,7 +42,8 @@ public class Solution {
     public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
         al = new ArrayList<DirectedGraphNode>();
         if(graph == null || graph.size() == 0) return al;
-        solution1(graph);
+        //solution1(graph);
+        solution2(graph);
         return al;
     }
     public void solution1(ArrayList<DirectedGraphNode> graph){
@@ -65,5 +66,39 @@ public class Solution {
             }
         }
         st.push(cur); // finished node
+    }
+    //not in hm: not seen before
+    //in hm but false: seen but not searched
+    //in hm and true: seen and searched
+    public void solution2(ArrayList<DirectedGraphNode> graph){
+        hs = new HashSet<DirectedGraphNode>(); // invalid nodes
+        hm = new HashMap<DirectedGraphNode,Boolean>();
+        st = new Stack<DirectedGraphNode>();
+        Stack<DirectedGraphNode> st1 = new Stack<DirectedGraphNode>();
+        for(DirectedGraphNode cur : graph){
+            if(!hm.containsKey(cur)){ // not marked
+                hm.put(cur, false); // mark as seen but not searched
+                st1.push(cur);
+                while(!st1.empty()){
+                    DirectedGraphNode tmp = st1.pop();
+                    if(!hm.get(tmp)){ // seen but not searched
+                        hm.put(tmp, true); // set to be searched
+                        st1.push(tmp);
+                        for(DirectedGraphNode i : tmp.neighbors){
+                            if(!hm.containsKey(i)){ // not marked
+                                hm.put(i, false); // mark
+                                st1.push(i);
+                            }else if(!hm.get(i)){ // in stack but should be searched
+                                st1.push(i);
+                            }
+                        }
+                    }else if(!hs.contains(tmp)){
+                        st.push(tmp); // seen and searched
+                        hs.add(tmp);; // made invalid
+                    }
+                }
+            }
+        }
+        while(!st.empty()) al.add(st.pop());
     }
 }
