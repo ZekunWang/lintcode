@@ -1,0 +1,39 @@
+/*
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+Example
+For example,
+If n = 4 and k = 2, a solution is:
+[[2,4],[3,4],[2,3],[1,2],[1,3],[1,4]]
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+    vector<vector<int> > v;
+    void buildVector(int lo, int hi, int k, vector<int> vt);
+public:
+    /**
+     * @param n: Given the range of numbers
+     * @param k: Given the numbers of combinations
+     * @return: All the combinations of k numbers out of 1..n
+     */
+    vector<vector<int> > combine(int n, int k) {
+        if(!k || n < k) return v;
+        buildVector(1, n - k + 1, k, vector<int>());
+        return v;
+    }
+};
+
+void Solution::buildVector(int lo, int hi, int k, vector<int> vt){
+    if(k-- == 0){
+        v.push_back(vt);
+        return;
+    }
+    while(lo <= hi){
+        vector<int> tmp(vt);
+        tmp.push_back(lo++);
+        buildVector(lo, hi + 1, k, tmp);
+    }
+}
