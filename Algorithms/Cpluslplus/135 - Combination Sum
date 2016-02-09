@@ -1,0 +1,52 @@
+/*
+Given a set of candidate numbers (C) and a target number (T), 
+find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Example
+given candidate set 2,3,6,7 and target 7, 
+A solution set is: 
+[7] 
+[2, 2, 3] 
+
+Note
+All numbers (including target) will be positive integers.
+Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+The solution set must not contain duplicate combinations.
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+    vector<vector<int> > v;
+    void buildVector(vector<int> &cand, int lo, int hi, int tg, vector<int> vt);
+public:
+    /**
+     * @param candidates: A list of integers
+     * @param target:An integer
+     * @return: A list of lists of integers
+     */
+    vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
+        if(!candidates.size()) return v;
+        sort(candidates.begin(), candidates.end());
+        buildVector(candidates, 0, candidates.size(), target, vector<int>());
+        return v;
+    }
+};
+
+void Solution::buildVector(vector<int> &cand, int lo, int hi, int tg, vector<int> vt){
+    if(!tg){
+        v.push_back(vt);
+        return;
+    }
+    while(lo < hi){
+        int val(cand[lo]);
+        if(val > tg) return;
+        vector<int> tmp(vt);
+        tmp.push_back(val);
+        buildVector(cand, lo++, hi, tg - val, tmp);
+        while(lo < hi && cand[lo] == cand[lo - 1]) lo++;
+    }
+}
