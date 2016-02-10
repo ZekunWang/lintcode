@@ -1,0 +1,57 @@
+/*
+Given a list of numbers that may has duplicate numbers, return all possible subsets
+
+Example
+If S = [1,2,2], a solution is:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+Note
+Each element in a subset must be in non-descending order.
+The ordering between two subsets is free.
+The solution set must not contain duplicate subsets.
+Challenge
+Can you do it in both recursively and iteratively?
+*/
+
+import java.util.*;
+
+class Solution {
+    /**
+     * @param S: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    private ArrayList<ArrayList<Integer>> al;
+    public ArrayList<ArrayList<Integer>> subsetsWithDup(ArrayList<Integer> S) {
+        al = new ArrayList<ArrayList<Integer>>();
+        al.add(new ArrayList<Integer>());
+        if(S.size() == 0) return al;
+        Collections.sort(S);
+        al.add(new ArrayList<Integer>());
+        al.get(1).add(S.get(0));
+        int pre = 1, cur = al.size();
+        for(int i = 1; i < S.size(); i++){
+            int val = S.get(i);
+            if(val != S.get(i - 1)){
+                for(int j = 0; j < pre; j++){
+                    ArrayList<Integer> tmp = new ArrayList<Integer>(al.get(j));
+                    tmp.add(val);
+                    al.add(tmp);
+                }
+            }
+            for(int j = pre; j < cur; j++){
+                ArrayList<Integer> tmp = new ArrayList<Integer>(al.get(j));
+                tmp.add(val);
+                al.add(tmp);
+            }
+            pre = cur;
+            cur = al.size();
+        }
+        return al;
+    }
+}
