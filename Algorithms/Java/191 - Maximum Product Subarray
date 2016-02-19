@@ -1,0 +1,54 @@
+/*
+Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+Example
+For example, given the array [2,3,-2,4], the contiguous subarray [2,3] has the largest product = 6.
+*/
+
+public class Solution {
+    /**
+     * @param nums: an array of integers
+     * @return: an integer
+     */
+    public int maxProduct(int[] nums) {
+        //return solution1(nums);
+        return solution2(nums);
+    }
+    public int solution1(int[] n){
+        if(n == null) return 0;
+        int sz = n.length;
+        if(sz == 0) return 0;
+        int[][] m = new int[2][sz];
+        m[0][0] = m[1][0] = n[0];
+        int prod = n[0];
+        for(int i = 1; i < sz; i++){
+            if(n[i] >= 0){
+                m[0][i] = Math.max(1, m[0][i-1]) * n[i];
+                m[1][i] = Math.min(1, m[1][i-1]) * n[i];
+            }else{
+                m[0][i] = Math.min(1, m[1][i-1]) * n[i];
+                m[1][i] = Math.max(1, m[0][i-1]) * n[i];
+            }
+            prod = Math.max(prod, m[0][i]);
+        }
+        return prod;
+    }
+    public int solution2(int[] n){
+        if(n == null) return 0;
+        int sz = n.length;
+        if(sz == 0) return 0;
+        int prod = n[0], max = n[0], min = n[0], tmp = 0;
+        for(int i = 1; i < sz; i++){
+            if(n[i] >= 0){
+                max = Math.max(1, max) * n[i];
+                min = Math.min(1, min) * n[i];
+            }else{
+                tmp = max;
+                max = Math.min(1, min) * n[i];
+                min = Math.max(1, tmp) * n[i];
+            }
+            prod = Math.max(prod, max);
+        }
+        return prod;
+    }
+}
