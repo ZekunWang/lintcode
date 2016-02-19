@@ -1,0 +1,68 @@
+/*
+Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. 
+(each operation is counted as 1 step.)
+
+You have the following 3 operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+
+Example
+Given word1 = "mart" and word2 = "karma", return 3.
+*/
+
+#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(string s1, string s2);
+    int solution2(string s1, string s2);
+public:    
+    /**
+     * @param word1 & word2: Two string.
+     * @return: The minimum number of steps.
+     */
+    int minDistance(string word1, string word2) {
+        //return solution1(word1, word2);
+        return solution2(word1, word2);
+    }
+};
+
+int Solution::solution1(string s1, string s2){
+    int row = s1.length(), col = s2.length();
+    vector<vector<int> > v(row + 1, vector<int>(col + 1, 0));
+    v[0][0] = 0;
+    for(int i = 1; i <= row; i++) v[i][0] = i;
+    for(int j = 1; j <= col; j++) v[0][j] = j;
+    for(int i = 1; i <= row; i++){
+        for(int j = 1; j <= col; j++){
+            if(s2[j-1] == s1[i-1]) v[i][j] = v[i-1][j-1];
+            else{
+                v[i][j] = 1 + min(v[i-1][j-1], min(v[i][j-1], v[i-1][j]));
+            }
+        }
+    }
+    return v[row][col];
+}
+
+int Solution::solution2(string s1, string s2){
+    int row = s1.length(), col = s2.length();
+    vector<int> v(col + 1, 0);
+    int cur = 0, nxt = 0;
+    for(int j = 0; j <= col; j++) v[j] = j;
+    for(int i = 1; i <= row; i++){
+        cur = v[0];
+        v[0]++;
+        for(int j = 1; j <= col; j++){
+            nxt = v[j];
+            if(s2[j-1] == s1[i-1]) v[j] = cur;
+            else{
+                v[j] = 1 + min(cur, min(v[j-1], v[j]));
+            }
+            cur = nxt;
+        }
+    }
+    return v[col];
+}
