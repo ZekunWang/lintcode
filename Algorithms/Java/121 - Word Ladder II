@@ -1,0 +1,94 @@
+/*
+iven two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the dictionary
+
+n:
+start = "hit"
+end = "cog"
+dict = ["hot","dot","dog","lot","log"]
+Return
+  [
+    ["hit","hot","dot","dog","cog"],
+    ["hit","hot","lot","log","cog"]
+  ]
+Note
+All words have the same length.
+All words contain only lowercase alphabetic characters.
+*/
+
+import java.util.*;
+
+public class Solution {
+    /**
+      * @param start, a string
+      * @param end, a string
+      * @param dict, a set of string
+      * @return a list of lists of string
+      */
+    private ArrayList<List<String>> al;
+    private LinkedList<ArrayList<String>> queue;
+    private HashSet<String> chk;
+    public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+        al = new ArrayList<List<String>>();
+        queue = new LinkedList<ArrayList<String>>();
+        chk = new HashSet<String>();
+        solution1(start, end, dict);
+        return al;
+    }
+    public void solution1(String start, String end, Set<String> dict){
+        if(start == null || end == null || dict == null || dict.size() == 0)
+            return;
+        queue.add(new ArrayList<String>(Arrays.asList(start)));
+        dict.remove(start);
+        dict.remove(end);
+        while(!dict.isEmpty()){
+            for(int i = 0, cnt = queue.size(); i < cnt; i++){
+                ArrayList<String> list = queue.peek();
+                int sz = list.size();
+                String cur = list.get(sz - 1);
+                if(getDiff(cur, end) == 1){
+                    filterEndString(end, cnt - i);
+                    return;
+                }
+                queue.poll();
+                StringBuilder sb = new StringBuilder(cur);
+                for(int j = 0; j < sb.length(); j++){   //choose char to search
+                    char orig = sb.charAt(j);
+                    for(int k = 0; k < 26; k++){
+                        if(orig == k + 'a') continue;
+                        sb.setCharAt(j, (char)(k + 'a')); //change from 'a' to 'z'
+                        String ns = sb.toString();  //new string to search in dict
+                        if(dict.contains(ns)){
+                            chk.add(ns);
+                            ArrayList<String> tmp = new ArrayList<>(list);
+                            tmp.add(ns);
+                            queue.add(tmp);
+                        }
+                    }
+                    sb.setCharAt(j, orig);
+                }
+            }
+            for(String ds : chk) dict.remove(ds);   //string to be deleted
+            chk.clear();
+        }
+    }
+    public int getDiff(String cur, String end){
+        int cnt = 0;
+        for(int i = 0; i < cur.length(); i++)
+            if(cur.charAt(i) != end.charAt(i))
+                cnt++;
+        return cnt;
+    }
+    public void filterEndString(String end, int len){
+        while(len-- > 0){
+            ArrayList<String> list = queue.poll();
+            int sz = list.size();
+            if(getDiff(list.get(sz - 1), end) == 1){
+                list.add(end);
+                al.add(list);
+            }
+        }
+    }
+}
