@@ -1,0 +1,70 @@
+/*
+Follow up for "Unique Paths":
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+
+Example
+For example,
+There is one obstacle in the middle of a 3x3 grid as illustrated below.
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+The total number of unique paths is 2.
+
+Note
+m and n will be at most 100.
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(vector<vector<int> > &grid);
+    int solution2(vector<vector<int> > &grid);
+public:
+    /**
+     * @param obstacleGrid: A list of lists of integers
+     * @return: An integer
+     */ 
+    int uniquePathsWithObstacles(vector<vector<int> > &obstacleGrid) {
+        //return solution1(obstacleGrid);
+        return solution2(obstacleGrid);
+    }
+};
+
+int Solution::solution1(vector<vector<int> > &grid){
+    int row(grid.size());
+    if(row == 0) return 0;
+    int col(grid[0].size());
+    if(col == 0) return 0;
+    if(grid[0][0] == 1) return 0;
+    vector<vector<int> > cnt(row, vector<int>(col, 0));
+    for(int j = 0; j < col && grid[0][j] == 0; j++) cnt[0][j] = 1;
+    for(int i = 1; i < row && grid[i][0] == 0; i++) cnt[i][0] = 1;
+    for(int i = 1; i < row; i++){
+        for(int j = 1; j < col; j++){
+            if(grid[i][j] == 0) cnt[i][j] = cnt[i-1][j] + cnt[i][j-1];
+        }
+    }
+    return cnt[row-1][col-1];
+}
+
+int Solution::solution2(vector<vector<int> > &grid){
+    int row(grid.size());
+    if(row == 0) return 0;
+    int col(grid[0].size());
+    if(col == 0) return 0;
+    if(grid[0][0] == 1) return 0;
+    vector<int> cnt(col, 0);
+    for(int j = 0; j < col && grid[0][j] == 0; j++) cnt[j] = 1;
+    for(int i = 1; i < row; i++){
+        if(grid[i][0] == 1) cnt[0] = 0;
+        for(int j = 1; j < col; j++){
+            if(grid[i][j] == 0) cnt[j] = cnt[j] + cnt[j-1];
+            else cnt[j] = 0;
+        }
+    }
+    return cnt[col-1];
+}
