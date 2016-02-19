@@ -1,0 +1,64 @@
+/*
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+Example
+Given the following triangle:
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
+
+Note
+Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
+*/
+
+public class Solution {
+    /**
+     * @param triangle: a list of lists of integers.
+     * @return: An integer, minimum path sum.
+     */
+    public int minimumTotal(int[][] triangle) {
+        //return solution1(triangle);
+        return solution2(triangle);
+    }
+    public int solution1(int[][] tri){
+        if(tri == null) return 0;
+        int row = tri.length, sum = Integer.MAX_VALUE;
+        if(row == 0) return 0;
+        int[][] cnt = new int[row][];
+        for(int i = 0; i < row; i++) cnt[i] = new int[tri[i].length];
+        cnt[0][0] = tri[0][0];
+        for(int i = 1; i < row; i++){
+            int sz = cnt[i].length, j = sz - 1;
+            cnt[i][j] = tri[i][j] + cnt[i-1][j-1];
+            while(--j > 0){
+                cnt[i][j] = tri[i][j] + Math.min(cnt[i-1][j], cnt[i-1][j-1]);
+            }
+            cnt[i][0] = tri[i][0] + cnt[i-1][0];
+        }
+        for(int j = 0; j < cnt[row-1].length; j++)
+            sum = Math.min(sum, cnt[row-1][j]);
+        return sum;
+    }
+    public int solution2(int[][] tri){
+        if(tri == null) return 0;
+        int row = tri.length, sum = Integer.MAX_VALUE;
+        if(row == 0) return 0;
+        int[] cnt = new int[tri[row-1].length];
+        cnt[0] = tri[0][0];
+        for(int i = 1; i < row; i++){
+            int sz = tri[i].length, j = sz - 1;
+            cnt[j] = tri[i][j] + cnt[j-1];
+            while(--j > 0){
+                cnt[j] = tri[i][j] + Math.min(cnt[j], cnt[j-1]);
+            }
+            cnt[0] += tri[i][0];
+        }
+        for(int j = 0; j < cnt.length; j++)
+            sum = Math.min(sum, cnt[j]);
+        return sum;
+    }
+}
