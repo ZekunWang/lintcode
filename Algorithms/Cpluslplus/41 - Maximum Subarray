@@ -1,0 +1,53 @@
+/*
+Given an array of integers, find a contiguous subarray which has the largest sum.
+
+Example
+Given the array [−2,2,−3,4,−1,2,1,−5,3], the contiguous subarray [4,−1,2,1] has the largest sum = 6.
+
+Note
+The subarray should contain at least one number.
+
+Challenge
+Can you do it in time complexity O(n)?
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+    int solution1(vector<int> &nums);
+    int solution2(vector<int> &nums);
+public:    
+    /**
+     * @param nums: A list of integers
+     * @return: A integer indicate the sum of max subarray
+     */
+    int maxSubArray(vector<int> nums) {
+        return solution1(nums);
+        //return solution2(nums);
+    }
+};
+
+int Solution::solution1(vector<int> &nums){
+    int sz = nums.size();
+    if(sz == 0) return 0;
+    vector<int> cnt(sz, 0);
+    cnt[0] = nums[0];
+    int sum = cnt[0];
+    for(int i = 1; i < sz; i++){
+        cnt[i] = nums[i] + max(cnt[i-1], 0);
+        sum = max(sum, cnt[i]);
+    }
+    return sum;
+}
+
+int Solution::solution2(vector<int> &nums){
+    int sz = nums.size();
+    if(sz == 0) return 0;
+    int sum = nums[0], cur = sum;
+    for(int i = 1; i < sz; i++){
+        cur = nums[i] + max(cur, 0);
+        sum = max(sum, cur);
+    }
+    return sum;
+}
