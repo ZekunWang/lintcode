@@ -1,0 +1,63 @@
+/*
+Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. 
+(each operation is counted as 1 step.)
+
+You have the following 3 operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+
+Example
+Given word1 = "mart" and word2 = "karma", return 3.
+*/
+
+public class Solution {
+    /**
+     * @param word1 & word2: Two string.
+     * @return: The minimum number of steps.
+     */
+    public int minDistance(String word1, String word2) {
+        //return solution1(word1, word2);
+        return solution2(word1, word2);
+    }
+    public int solution1(String s1, String s2){
+        if(s1 == null && s2 == null) return Integer.MAX_VALUE;
+        if(s1 == null) return s2.length();
+        if(s2 == null) return s1.length();
+        int row = s1.length(), col = s2.length();
+        int[][] cnt = new int[row+1][col+1];
+        for(int j = 0; j <= col; j++) cnt[0][j] = j;
+        for(int i = 1; i <= row; i++) cnt[i][0] = i;
+        for(int i = 1; i <= row; i++){
+            for(int j = 1; j <= col; j++){
+                if(s1.charAt(i-1) == s2.charAt(j-1)) cnt[i][j] = cnt[i-1][j-1];
+                else{
+                    cnt[i][j] = 1 + Math.min(cnt[i-1][j-1], Math.min(cnt[i][j-1], cnt[i-1][j]));
+                }
+            }
+        }
+        return cnt[row][col];
+    }
+    public int solution2(String s1, String s2){
+        if(s1 == null && s2 == null) return Integer.MAX_VALUE;
+        if(s1 == null) return s2.length();
+        if(s2 == null) return s1.length();
+        int row = s1.length(), col = s2.length(), cur = 0, nxt = 0;
+        int[] cnt = new int[col+1];
+        for(int j = 0; j <= col; j++) cnt[j] = j;
+        for(int i = 1; i <= row; i++){
+            cur = cnt[0];
+            cnt[0]++;
+            for(int j = 1; j <= col; j++){
+                nxt = cnt[j];
+                if(s1.charAt(i-1) == s2.charAt(j-1)) cnt[j] = cur;
+                else{
+                    cnt[j] = 1 + Math.min(cur, Math.min(cnt[j-1], nxt));
+                }
+                cur = nxt;
+            }
+        }
+        return cnt[col];
+    }
+}
