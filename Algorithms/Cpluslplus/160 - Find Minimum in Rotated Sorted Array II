@@ -1,0 +1,32 @@
+/*
+Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+Find the minimum element.
+The array may contain duplicates.
+
+Example
+Given [4,4,5,6,7,0,1,2] return 0
+*/
+
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    /**
+     * @param num: the rotated sorted array
+     * @return: the minimum number in the array
+     */
+    int findMin(vector<int> &num) {
+        int l(0), r(num.size() - 1), m(0);
+        while(l < r - 1){
+            m = l + (r - l) / 2;
+            if(num[m] > num[r]) l = m;
+            else if(num[m] < num[r]) r = m;
+            else r--;
+        }
+        return min(num[l], num[r]);
+    }
+};
