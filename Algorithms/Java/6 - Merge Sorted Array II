@@ -1,0 +1,37 @@
+/*
+Merge two given sorted integer array A and B into a new sorted integer array.
+
+Example
+A=[1,2,3,4]
+
+B=[2,4,5,6]
+
+return [1,2,2,3,4,4,5,6]
+
+Challenge
+How can you optimize your algorithm if one array is very large and the other is very small?
+*/
+
+class Solution {
+    /**
+     * @param A and B: sorted integer array A and B.
+     * @return: A new sorted integer array
+     */
+    public int[] mergeSortedArray(int[] A, int[] B) {
+        if(A == null && B == null) return null;
+        if(A == null) return B;
+        if(B == null) return A;
+        int lenA = A.length - 1, lenB = B.length - 1, lenR = lenA + lenB + 1;
+        int[] res = new int[lenR + 1];
+        while(lenA >= 0 && lenB >= 0){
+            res[lenR--] = A[lenA] <= B[lenB] ? B[lenB--] : A[lenA--];
+        }
+        while(lenA >= 0){
+            res[lenR--] = A[lenA--];
+        }
+        while(lenB >= 0){
+            res[lenR--] = B[lenB--];
+        }
+        return res;
+    }
+}
